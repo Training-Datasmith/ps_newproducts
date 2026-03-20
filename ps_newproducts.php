@@ -61,6 +61,13 @@ class Ps_NewProducts extends Module implements WidgetInterface
         $this->templateFile = 'module:ps_newproducts/views/templates/hook/ps_newproducts.tpl';
     }
 
+    /**
+     * Install the module, set default configuration values, and register hooks.
+     *
+     * Default: NEW_PRODUCTS_NBR = 8 (number of new products shown on the homepage).
+     *
+     * @return bool True on successful installation, false otherwise
+     */
     public function install()
     {
         $this->_clearCache('*');
@@ -74,6 +81,11 @@ class Ps_NewProducts extends Module implements WidgetInterface
         ;
     }
 
+    /**
+     * Uninstall the module and remove its configuration values.
+     *
+     * @return bool True on successful uninstallation, false otherwise
+     */
     public function uninstall()
     {
         $this->_clearCache('*');
@@ -86,26 +98,55 @@ class Ps_NewProducts extends Module implements WidgetInterface
         return true;
     }
 
+    /**
+     * Invalidate the template cache when a product is added.
+     *
+     * @param array $params Hook parameters containing the new product data
+     */
     public function hookActionProductAdd($params)
     {
         $this->_clearCache('*');
     }
 
+    /**
+     * Invalidate the template cache when a product is updated.
+     *
+     * @param array $params Hook parameters containing the updated product data
+     */
     public function hookActionProductUpdate($params)
     {
         $this->_clearCache('*');
     }
 
+    /**
+     * Invalidate the template cache when a product is deleted.
+     *
+     * @param array $params Hook parameters containing the deleted product data
+     */
     public function hookActionProductDelete($params)
     {
         $this->_clearCache('*');
     }
 
+    /**
+     * Clear the Smarty template cache for this module's template.
+     *
+     * @param string      $template   Template name (ignored — always clears the module template)
+     * @param string|null $cache_id   Optional cache identifier (unused)
+     * @param string|null $compile_id Optional compile identifier (unused)
+     */
     public function _clearCache($template, $cache_id = null, $compile_id = null)
     {
         parent::_clearCache($this->templateFile);
     }
 
+    /**
+     * Render the module configuration form and handle settings submission.
+     *
+     * Validates NEW_PRODUCTS_NBR and PS_NB_DAYS_NEW_PRODUCT before saving.
+     *
+     * @return string HTML form with optional confirmation/error messages
+     */
     public function getContent()
     {
         $output = '';
@@ -194,6 +235,16 @@ class Ps_NewProducts extends Module implements WidgetInterface
         ];
     }
 
+    /**
+     * Render the new-products widget HTML using a cached Smarty template.
+     *
+     * Returns false when there are no new products to display.
+     *
+     * @param string $hookName     Name of the hook triggering the widget render
+     * @param array  $configuration Hook configuration parameters
+     *
+     * @return string|false Rendered HTML or false when no products are available
+     */
     public function renderWidget($hookName, array $configuration)
     {
         if (!$this->isCached($this->templateFile, $this->getCacheId('ps_newproducts'))) {
@@ -209,6 +260,16 @@ class Ps_NewProducts extends Module implements WidgetInterface
         return $this->fetch($this->templateFile, $this->getCacheId('ps_newproducts'));
     }
 
+    /**
+     * Build the template variables array for the new-products widget.
+     *
+     * Returns false when no new products exist so the widget can be suppressed.
+     *
+     * @param string $hookName     Name of the hook triggering the widget render
+     * @param array  $configuration Hook configuration parameters
+     *
+     * @return array{products: array, allNewProductsLink: string}|false Template variables or false if no products
+     */
     public function getWidgetVariables($hookName, array $configuration)
     {
         $products = $this->getNewProducts();
