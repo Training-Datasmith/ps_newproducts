@@ -99,4 +99,11 @@ assert_log_ok sorted
 run_phpunit shuffled "20261010"
 assert_log_ok shuffled
 
+cd "$ROOT"
+if [ -n "$(git status --porcelain)" ]; then
+  echo "Working tree not clean after tests" >&2
+  git status --porcelain
+  exit 1
+fi
+
 echo "SUITE_OK tests=$EXPECTED_TESTS assertions=$EXPECTED_ASSERTIONS"

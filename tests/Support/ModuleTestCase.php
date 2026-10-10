@@ -22,6 +22,7 @@ abstract class ModuleTestCase extends PHPUnit_Framework_TestCase
         Tools::reset();
         Hook::reset();
         Product::reset();
+        ProductAssembler::resetCounts();
         Context::reset();
         Module::resetStatics();
         PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter::reset();

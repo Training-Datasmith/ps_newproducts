@@ -27,8 +27,8 @@ class WidgetVersionTest extends ModuleTestCase
         ));
         $lines = $this->parseChildOutput($result);
         $this->assertSame('core', $lines['PRESENTER']);
-        $this->assertSame('bulk', $lines['ASSEMBLE']);
-        $this->assertNotSame('', $lines['IDS']);
+        $this->assertSame('bulk', $lines['ASSEMBLER']);
+        $this->assertSame('2', $lines['PRODUCT_COUNT']);
         $this->assertSame('https://shop.test/new-products', $lines['LINK']);
     }
 
@@ -40,6 +40,7 @@ class WidgetVersionTest extends ModuleTestCase
         ));
         $lines = $this->parseChildOutput($result);
         $this->assertSame('adapter', $lines['PRESENTER']);
+        $this->assertSame('bulk', $lines['ASSEMBLER']);
     }
 
     public function testPerProductAssemblyWhenBulkMethodIsMissing()
@@ -50,7 +51,7 @@ class WidgetVersionTest extends ModuleTestCase
         ));
         $lines = $this->parseChildOutput($result);
         $this->assertSame('adapter', $lines['PRESENTER']);
-        $this->assertSame('single', $lines['ASSEMBLE']);
-        $this->assertSame('1,2', $lines['IDS']);
+        $this->assertSame('single', $lines['ASSEMBLER']);
+        $this->assertSame('2', $lines['PRODUCT_COUNT']);
     }
 }

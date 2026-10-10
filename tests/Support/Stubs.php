@@ -228,6 +228,16 @@ if (!defined('PS_TEST_ASSEMBLER_SINGLE')) {
 
         public $assembleProductCalls = 0;
 
+        public static $bulkCalls = 0;
+
+        public static $singleCalls = 0;
+
+        public static function resetCounts()
+        {
+            self::$bulkCalls = 0;
+            self::$singleCalls = 0;
+        }
+
         public function __construct($context)
         {
             $this->context = $context;
@@ -235,6 +245,7 @@ if (!defined('PS_TEST_ASSEMBLER_SINGLE')) {
 
         public function assembleProducts($products)
         {
+            ++self::$bulkCalls;
             ++$this->assembleProductsCalls;
             $out = array();
             foreach ($products as $p) {
@@ -246,6 +257,7 @@ if (!defined('PS_TEST_ASSEMBLER_SINGLE')) {
 
         public function assembleProduct($product)
         {
+            ++self::$singleCalls;
             ++$this->assembleProductCalls;
 
             return array('assembled' => true, 'id' => $product['id']);
@@ -258,6 +270,16 @@ if (!defined('PS_TEST_ASSEMBLER_SINGLE')) {
 
         public $assembleProductCalls = 0;
 
+        public static $bulkCalls = 0;
+
+        public static $singleCalls = 0;
+
+        public static function resetCounts()
+        {
+            self::$bulkCalls = 0;
+            self::$singleCalls = 0;
+        }
+
         public function __construct($context)
         {
             $this->context = $context;
@@ -265,6 +287,7 @@ if (!defined('PS_TEST_ASSEMBLER_SINGLE')) {
 
         public function assembleProduct($product)
         {
+            ++self::$singleCalls;
             ++$this->assembleProductCalls;
 
             return array('assembled' => true, 'id' => $product['id']);

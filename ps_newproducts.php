@@ -304,16 +304,17 @@ class Ps_NewProducts extends Module implements WidgetInterface
             return false;
         }
 
-        $intValue = (int) $value;
-        if ((float) $value != $intValue) {
+        $numeric = (float) $value;
+        if ($numeric < 0) {
             return false;
         }
 
-        if ($intValue < 0) {
+        if ($numeric != floor($numeric)) {
             return false;
         }
 
-        if ($intValue >= 4294967296) {
+        $stored = (int) $value;
+        if ($stored < 0 || $stored >= 4294967296) {
             return false;
         }
 

@@ -28,8 +28,9 @@ class WidgetRenderTest extends ModuleTestCase
         Configuration::set('PS_NB_DAYS_NEW_PRODUCT', 20);
         Product::$returnValue = array();
         $this->assertFalse($this->module->getWidgetVariables('displayHome', array()));
+        Product::$calls = array();
         $this->assertFalse($this->module->renderWidget('displayHome', array()));
-        $this->assertSame(2, count(Product::$calls));
+        $this->assertSame(1, count(Product::$calls));
     }
 
     public function testPresentsProductsOnCacheMiss()

@@ -45,20 +45,23 @@ if ($script === 'widget-version') {
     Configuration::set('PS_NB_DAYS_NEW_PRODUCT', 20);
     Configuration::set('NEW_PRODUCTS_NBR', 8);
     $module = new Ps_NewProducts();
+    ProductAssembler::resetCounts();
     Product::$returnValue = array(array('id' => 1), array('id' => 2));
     $vars = $module->getWidgetVariables('displayHome', array());
     $adapter = PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter::$constructCount;
     $core = PrestaShop\PrestaShop\Core\Product\ProductListingPresenter::$constructCount;
     $presenter = $adapter > 0 ? 'adapter' : ($core > 0 ? 'core' : 'none');
-    $assemble = $bulk ? 'bulk' : 'single';
-    $ids = array();
-    foreach ($vars['products'] as $p) {
-        $ids[] = (string) $p['id'];
+    if (ProductAssembler::$bulkCalls > 0) {
+        $assembler = 'bulk';
+    } elseif (ProductAssembler::$singleCalls > 0) {
+        $assembler = 'single';
+    } else {
+        $assembler = 'none';
     }
     echo 'PRESENTER=' . $presenter . "\n";
-    echo 'ASSEMBLE=' . $assemble . "\n";
-    echo 'IDS=' . implode(',', $ids) . "\n";
+    echo 'ASSEMBLER=' . $assembler . "\n";
     echo 'LINK=' . $vars['allNewProductsLink'] . "\n";
+    echo 'PRODUCT_COUNT=' . count($vars['products']) . "\n";
     exit(0);
 }
 
