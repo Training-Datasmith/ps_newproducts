@@ -73,6 +73,41 @@ class GetContentValidationTest extends ModuleTestCase
         $this->assertRejected($this->module->getContent(), 3, 15);
     }
 
+    public function testNearMaxFractionalHighIsRejected()
+    {
+        $this->seedConfiguration();
+        $this->submit(array('NEW_PRODUCTS_NBR' => '4294967295.9999999', 'PS_NB_DAYS_NEW_PRODUCT' => '20'));
+        $this->assertRejected($this->module->getContent(), 3, 15);
+    }
+
+    public function testNearMaxFractionalLowIsRejected()
+    {
+        $this->seedConfiguration();
+        $this->submit(array('NEW_PRODUCTS_NBR' => '4294967295.0000001', 'PS_NB_DAYS_NEW_PRODUCT' => '20'));
+        $this->assertRejected($this->module->getContent(), 3, 15);
+    }
+
+    public function testNearMaxFractionalBelowIsRejected()
+    {
+        $this->seedConfiguration();
+        $this->submit(array('NEW_PRODUCTS_NBR' => '4294967294.9999999', 'PS_NB_DAYS_NEW_PRODUCT' => '20'));
+        $this->assertRejected($this->module->getContent(), 3, 15);
+    }
+
+    public function testScientificMagnitudeTooLargeIsRejected()
+    {
+        $this->seedConfiguration();
+        $this->submit(array('NEW_PRODUCTS_NBR' => '5e9', 'PS_NB_DAYS_NEW_PRODUCT' => '20'));
+        $this->assertRejected($this->module->getContent(), 3, 15);
+    }
+
+    public function testInfiniteScientificNotationIsRejected()
+    {
+        $this->seedConfiguration();
+        $this->submit(array('NEW_PRODUCTS_NBR' => '1e309', 'PS_NB_DAYS_NEW_PRODUCT' => '20'));
+        $this->assertRejected($this->module->getContent(), 3, 15);
+    }
+
     public function testZeroDayCountIsRejected()
     {
         $this->seedConfiguration();

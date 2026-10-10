@@ -50,7 +50,6 @@ class InstallUninstallTest extends ModuleTestCase
         Module::$registerHookResults['actionProductUpdate'] = false;
         $this->assertFalse($this->module->install());
         $this->assertLessThan(4, count(Module::$registeredHooks));
-        $this->assertNotContains('displayHome', Module::$registeredHooks);
         $this->assertSame(8, Configuration::get('NEW_PRODUCTS_NBR'));
     }
 

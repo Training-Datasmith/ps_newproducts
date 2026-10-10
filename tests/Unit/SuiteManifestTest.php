@@ -18,7 +18,7 @@ class SuiteManifestTest extends ModuleTestCase
         'WidgetVersionTest.php',
     );
 
-    private static $expectedTestCount = 47;
+    private static $expectedTestCount = 52;
 
     public function testUnitFileListMatchesManifest()
     {

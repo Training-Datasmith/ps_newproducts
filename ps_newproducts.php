@@ -304,8 +304,26 @@ class Ps_NewProducts extends Module implements WidgetInterface
             return false;
         }
 
+        if (is_string($value)) {
+            $dotPos = strpos($value, '.');
+            if ($dotPos !== false) {
+                $fractional = substr($value, $dotPos + 1);
+                $exponentPos = strcspn($fractional, 'eE');
+                if ($exponentPos < strlen($fractional)) {
+                    $fractional = substr($fractional, 0, $exponentPos);
+                }
+                if ($fractional !== '' && preg_match('/[1-9]/', $fractional)) {
+                    return false;
+                }
+            }
+        }
+
         $numeric = (float) $value;
-        if ($numeric < 0) {
+        if (!is_finite($numeric)) {
+            return false;
+        }
+
+        if ($numeric < 0 || $numeric >= 4294967296) {
             return false;
         }
 
