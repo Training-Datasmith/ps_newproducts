@@ -115,7 +115,10 @@ class Ps_NewProducts extends Module implements WidgetInterface
                 $output .= $this->displayError(
                     $this->trans('Please complete the "products to display" field.', [], 'Modules.Newproducts.Admin')
                 );
-            } elseif (0 === (int) $productNbr || 0 === (int) $productNbDays) {
+            } elseif (!$this->isAcceptableUnsignedSetting($productNbr)
+                || !$this->isAcceptableUnsignedSetting($productNbDays)
+                || (int) $productNbr < 1
+                || (int) $productNbDays < 1) {
                 $output .= $this->displayError(
                     $this->trans('Invalid number.', [], 'Modules.Newproducts.Admin')
                 );
@@ -277,5 +280,43 @@ class Ps_NewProducts extends Module implements WidgetInterface
         }
 
         return $products_for_template;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    private function isAcceptableUnsignedSetting($value)
+    {
+        if (!is_scalar($value) || is_bool($value)) {
+            return false;
+        }
+
+        if (is_string($value)) {
+            $value = trim($value);
+            if ($value === '') {
+                return false;
+            }
+        }
+
+        if (!is_numeric($value)) {
+            return false;
+        }
+
+        $intValue = (int) $value;
+        if ((float) $value != $intValue) {
+            return false;
+        }
+
+        if ($intValue < 0) {
+            return false;
+        }
+
+        if ($intValue >= 4294967296) {
+            return false;
+        }
+
+        return true;
     }
 }
