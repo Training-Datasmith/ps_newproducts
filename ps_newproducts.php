@@ -305,15 +305,13 @@ class Ps_NewProducts extends Module implements WidgetInterface
         }
 
         if (is_string($value)) {
-            $dotPos = strpos($value, '.');
-            if ($dotPos !== false) {
-                $fractional = substr($value, $dotPos + 1);
-                $exponentPos = strcspn($fractional, 'eE');
-                if ($exponentPos < strlen($fractional)) {
-                    $fractional = substr($fractional, 0, $exponentPos);
-                }
-                if ($fractional !== '' && preg_match('/[1-9]/', $fractional)) {
-                    return false;
+            if (strpos($value, 'e') === false && strpos($value, 'E') === false) {
+                $dotPos = strpos($value, '.');
+                if ($dotPos !== false) {
+                    $fractional = substr($value, $dotPos + 1);
+                    if ($fractional !== '' && preg_match('/[1-9]/', $fractional)) {
+                        return false;
+                    }
                 }
             }
         }
